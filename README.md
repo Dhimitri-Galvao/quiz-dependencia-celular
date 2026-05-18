@@ -38,9 +38,9 @@ No iPad/iPhone, abra pelo Safari e toque em:
 
 # Arquivos do projeto
 
-index.html
-manifest.json
-service-worker.js
-icon-192.png
-icon-512.png
-README.md
+- index.html
+- manifest.json
+- service-worker.js
+- icon-192.png
+- icon-512.png
+- README.md
