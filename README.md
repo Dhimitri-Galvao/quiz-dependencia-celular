@@ -8,7 +8,7 @@ Um quiz educativo em formato PWA mobile-first sobre uso do celular, tempo de tel
 
 # Sobre o projeto
 
-Este projeto foi criado para uma exposição escolar sobre tecnologia, tempo de tela e uso saudável do celular.
+Este projeto foi criado para uma exposição escolar.
 
 O quiz apresenta 8 perguntas rápidas e, ao final, mostra um dos três possíveis resultados:
 
