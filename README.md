@@ -8,7 +8,7 @@ Um quiz educativo em formato PWA mobile-first sobre uso do celular, tempo de tel
 
 # Sobre o projeto
 
-Este projeto foi criado para uma exposição escolar.
+Este projeto foi criado para a exposição agropecuária de itapetinga - Bahia, 2026.
 
 O quiz apresenta 8 perguntas rápidas e, ao final, mostra um dos três possíveis resultados:
 
