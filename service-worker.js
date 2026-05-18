@@ -1,4 +1,4 @@
-const CACHE_NAME = "quiz-celular-v1";
+const CACHE_NAME = "quiz-celular-v2";
 
 const FILES_TO_CACHE = [
   "index.html",
