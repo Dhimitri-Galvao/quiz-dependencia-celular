@@ -1,0 +1,23 @@
+{
+  "name": "Você é dependente do celular?",
+  "short_name": "Quiz Celular",
+  "description": "Quiz educativo sobre uso saudável do celular.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#6c63ff",
+  "orientation": "portrait",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

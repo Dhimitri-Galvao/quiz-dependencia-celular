@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6c63ff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Quiz Celular">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Você é dependente do celular?</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #6c63ff, #00c2ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #1f2937;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      min-height: 720px;
+      background: #f8fafc;
+      border-radius: 34px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .top-bar {
+      height: 34px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+    }
+
+    .notch {
+      width: 95px;
+      height: 10px;
+      background: #d1d5db;
+      border-radius: 999px;
+    }
+
+    .app {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen {
+      display: none;
+      flex: 1;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-card,
+    .question-card,
+    .result-card {
+      background: #ffffff;
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+
+    .emoji {
+      font-size: 54px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 30px;
+      line-height: 1.1;
+      color: #111827;
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      font-size: 22px;
+      color: #111827;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.5;
+      color: #4b5563;
+    }
+
+    .welcome-text {
+      margin-bottom: 22px;
+    }
+
+    .start-area {
+      margin-top: auto;
+    }
+
+    .info-box {
+      background: #eef2ff;
+      border-left: 4px solid #6c63ff;
+      padding: 14px;
+      border-radius: 14px;
+      margin: 18px 0;
+      font-size: 14px;
+      color: #3730a3;
+      line-height: 1.45;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #6c63ff, #00a6ff);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 24px rgba(108, 99, 255, 0.38);
+    }
+
+    .progress-area {
+      margin-bottom: 18px;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #22c55e, #6c63ff);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .question-icon {
+      font-size: 38px;
+      margin-bottom: 12px;
+    }
+
+    .options {
+      margin-top: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      background: #f9fafb;
+      color: #111827;
+      text-align: left;
+      border: 2px solid #e5e7eb;
+      box-shadow: none;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .option-btn:hover {
+      background: #eef2ff;
+      border-color: #6c63ff;
+      transform: scale(1.01);
+    }
+
+    .option-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: #e0e7ff;
+      color: #3730a3;
+      border-radius: 50%;
+      margin-right: 8px;
+      font-weight: 800;
+    }
+
+    .result-badge {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .badge-good {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .tips {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tip {
+      background: #f1f5f9;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.4;
+    }
+
+    .disclaimer {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .footer-note {
+      margin-top: auto;
+      padding-top: 18px;
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: center;
+    }
+
+    @media (max-height: 740px) {
+      .phone {
+        min-height: 640px;
+      }
+
+      .app {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 27px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="phone">
+    <div class="top-bar">
+      <div class="notch"></div>
+    </div>
+
+    <section class="app">
+      <!-- Tela inicial -->
+      <div id="welcomeScreen" class="screen active">
+        <div class="hero-card">
+          <div class="emoji">📱🧠</div>
+          <h1>Você é dependente do celular?</h1>
+          <p class="welcome-text">
+            Responda algumas perguntas rápidas e descubra como está sua relação com o celular.
+          </p>
+
+          <div class="info-box">
+            Quiz educativo para refletir sobre tecnologia, tempo de tela e uso saudável do celular.
+          </div>
+        </div>
+
+        <div class="start-area">
+          <button class="primary-btn" onclick="startQuiz()">Começar quiz 🚀</button>
+          <p class="footer-note">Expo escolar • Tecnologia e saúde digital</p>
+        </div>
+      </div>
+
+      <!-- Tela de perguntas -->
+      <div id="quizScreen" class="screen">
+        <div class="progress-area">
+          <div class="progress-text">
+            <span id="questionCounter">Pergunta 1 de 8</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="question-card">
+          <div id="questionIcon" class="question-icon">💬</div>
+          <h2 id="questionText"></h2>
+
+          <div class="options">
+            <button class="option-btn" onclick="answerQuestion(0)">
+              <span class="option-label">A</span>
+              <span id="optionA"></span>
+            </button>
+
+            <button class="option-btn" onclick="answerQuestion(1)">
+              <span class="option-label">B</span>
+              <span id="optionB"></span>
+            </button>
+
+            <button class="option-btn" onclick="answerQuestion(2)">
+              <span class="option-label">C</span>
+              <span id="optionC"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tela de resultado -->
+      <div id="resultScreen" class="screen">
+        <div class="result-card">
+          <div id="resultEmoji" class="emoji">✨</div>
+          <span id="resultBadge" class="result-badge"></span>
+          <h2 id="resultTitle"></h2>
+          <p id="resultExplanation"></p>
+
+          <div class="tips" id="tipsList"></div>
+
+          <p class="disclaimer">
+            Este teste é apenas educativo e não substitui avaliação profissional.
+          </p>
+        </div>
+
+        <div class="start-area">
+          <button class="primary-btn" onclick="restartQuiz()">Refazer quiz 🔄</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        icon: "⏰",
+        text: "Quanto tempo você passa no celular por dia?",
+        options: [
+          "Menos de 2 horas, sem atrapalhar minha rotina.",
+          "Entre 3 e 5 horas, às vezes perco a noção do tempo.",
+          "Mais de 6 horas, mesmo quando tenho outras tarefas."
+        ]
+      },
+      {
+        icon: "🌙",
+        text: "Você costuma usar o celular antes de dormir?",
+        options: [
+          "Raramente, costumo evitar telas à noite.",
+          "Às vezes, mas tento controlar.",
+          "Quase sempre, e isso atrapalha meu sono."
+        ]
+      },
+      {
+        icon: "📚",
+        text: "O celular atrapalha seus estudos ou tarefas?",
+        options: [
+          "Não, consigo me concentrar bem.",
+          "Às vezes me distraio com notificações.",
+          "Sim, frequentemente deixo tarefas para depois."
+        ]
+      },
+      {
+        icon: "🔔",
+        text: "Como você reage quando recebe notificações?",
+        options: [
+          "Vejo apenas quando posso.",
+          "Fico curioso e olho muitas vezes.",
+          "Sinto necessidade de responder imediatamente."
+        ]
+      },
+      {
+        icon: "👥",
+        text: "Durante conversas presenciais, você mexe no celular?",
+        options: [
+          "Quase nunca, presto atenção nas pessoas.",
+          "Às vezes olho rapidamente.",
+          "Sim, uso bastante mesmo com pessoas por perto."
+        ]
+      },
+      {
+        icon: "😟",
+        text: "Como você se sente quando fica sem celular?",
+        options: [
+          "Normal, consigo fazer outras atividades.",
+          "Um pouco inquieto ou entediado.",
+          "Muito ansioso, irritado ou perdido."
+        ]
+      },
+      {
+        icon: "🎮",
+        text: "Você usa o celular para fugir de problemas ou emoções ruins?",
+        options: [
+          "Raramente, tenho outras formas de lidar com isso.",
+          "Às vezes uso para me distrair.",
+          "Frequentemente uso para esquecer problemas."
+        ]
+      },
+      {
+        icon: "🏃",
+        text: "Você pratica atividades sem celular?",
+        options: [
+          "Sim, faço pausas e atividades offline.",
+          "Às vezes, mas poderia fazer mais.",
+          "Quase nunca, estou sempre com o celular por perto."
+        ]
+      }
+    ];
+
+    const results = [
+      {
+        min: 0,
+        max: 6,
+        title: "Uso equilibrado",
+        badge: "Baixo risco",
+        badgeClass: "badge-good",
+        emoji: "🌱",
+        explanation:
+          "Sua relação com o celular parece saudável. Você consegue usar a tecnologia sem deixar que ela controle sua rotina.",
+        tips: [
+          "Continue fazendo pausas durante o dia.",
+          "Mantenha momentos sem tela, como refeições e conversas.",
+          "Use a tecnologia como ferramenta, não como obrigação."
+        ]
+      },
+      {
+        min: 7,
+        max: 12,
+        title: "Sinal de alerta",
+        badge: "Médio risco",
+        badgeClass: "badge-warning",
+        emoji: "⚠️",
+        explanation:
+          "Seu uso do celular pode estar começando a atrapalhar algumas áreas da sua vida. Pequenas mudanças já podem ajudar bastante.",
+        tips: [
+          "Desative notificações que não são importantes.",
+          "Defina horários para estudar ou descansar sem celular.",
+          "Evite usar o celular nos 30 minutos antes de dormir."
+        ]
+      },
+      {
+        min: 13,
+        max: 16,
+        title: "Dependência digital em potencial",
+        badge: "Alto risco",
+        badgeClass: "badge-danger",
+        emoji: "🚨",
+        explanation:
+          "Seu resultado indica que o celular pode estar ocupando espaço demais na sua rotina. Vale conversar com alguém de confiança e buscar equilíbrio.",
+        tips: [
+          "Crie metas pequenas, como ficar 20 minutos longe do celular.",
+          "Substitua parte do tempo de tela por esporte, leitura ou conversa.",
+          "Procure apoio de familiares, professores ou profissionais se sentir dificuldade."
+        ]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const welcomeScreen = document.getElementById("welcomeScreen");
+    const quizScreen = document.getElementById("quizScreen");
+    const resultScreen = document.getElementById("resultScreen");
+
+    const questionCounter = document.getElementById("questionCounter");
+    const progressPercent = document.getElementById("progressPercent");
+    const progressFill = document.getElementById("progressFill");
+    const questionIcon = document.getElementById("questionIcon");
+    const questionText = document.getElementById("questionText");
+    const optionA = document.getElementById("optionA");
+    const optionB = document.getElementById("optionB");
+    const optionC = document.getElementById("optionC");
+
+    function showScreen(screen) {
+      welcomeScreen.classList.remove("active");
+      quizScreen.classList.remove("active");
+      resultScreen.classList.remove("active");
+      screen.classList.add("active");
+    }
+
+    function startQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      showScreen(quizScreen);
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const question = questions[currentQuestion];
+      const progress = Math.round((currentQuestion / questions.length) * 100);
+
+      questionCounter.textContent = `Pergunta ${currentQuestion + 1} de ${questions.length}`;
+      progressPercent.textContent = `${progress}%`;
+      progressFill.style.width = `${progress}%`;
+
+      questionIcon.textContent = question.icon;
+      questionText.textContent = question.text;
+      optionA.textContent = question.options[0];
+      optionB.textContent = question.options[1];
+      optionC.textContent = question.options[2];
+    }
+
+    function answerQuestion(points) {
+      score += points;
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      progressFill.style.width = "100%";
+      progressPercent.textContent = "100%";
+
+      const finalResult = results.find(result => score >= result.min && score <= result.max);
+
+      document.getElementById("resultEmoji").textContent = finalResult.emoji;
+      document.getElementById("resultTitle").textContent = finalResult.title;
+      document.getElementById("resultExplanation").textContent = finalResult.explanation;
+
+      const resultBadge = document.getElementById("resultBadge");
+      resultBadge.textContent = finalResult.badge;
+      resultBadge.className = `result-badge ${finalResult.badgeClass}`;
+
+      const tipsList = document.getElementById("tipsList");
+      tipsList.innerHTML = "";
+
+      finalResult.tips.forEach(tip => {
+        const tipElement = document.createElement("div");
+        tipElement.className = "tip";
+        tipElement.textContent = `✅ ${tip}`;
+        tipsList.appendChild(tipElement);
+      });
+
+      showScreen(resultScreen);
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      showScreen(welcomeScreen);
+    }
+  </script>
+
+  <script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log("Service Worker registrado com sucesso."))
+        .catch(error => console.log("Erro ao registrar Service Worker:", error));
+    });
+  }
+</script>
+</body>
+</html>
